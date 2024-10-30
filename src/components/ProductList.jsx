@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const api = "https://shop-pd211-awdhcvf3ebdpb7es.polandcentral-01.azurewebsites.net/api/products/all";
 
@@ -52,7 +53,9 @@ const ProductList = () => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Invite</a>
+                    <Link to={`/details/${record.id}`}>
+                        <Button color="primary" icon={<InfoCircleOutlined />} />
+                    </Link>
 
                     <Popconfirm
                         title="Delete the product"
