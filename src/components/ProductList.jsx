@@ -3,7 +3,7 @@ import { Button, message, Popconfirm, Space, Table, Tag } from 'antd';
 import { DeleteOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-const api = "https://shop-pd211-awdhcvf3ebdpb7es.polandcentral-01.azurewebsites.net/api/products/all";
+const api = "https://shop-pd211-awdhcvf3ebdpb7es.polandcentral-01.azurewebsites.net/api/products/";
 
 const ProductList = () => {
 
@@ -11,7 +11,7 @@ const ProductList = () => {
 
     useEffect(() => {
         // code...
-        fetch(api).then(res => res.json()).then(data => setProducts(data));
+        fetch(api + "all").then(res => res.json()).then(data => setProducts(data.sort((x, y) => y.id - x.id)));
     }, []);
 
     const columns = [
@@ -76,15 +76,23 @@ const ProductList = () => {
         const index = products.findIndex(x => x.id === id);
         if (index !== -1) {
             // TODO: delete from server
+            fetch(api + id, {
+                method: "DELETE"
+            }).then(res => {
+                if (res.status === 200) {
+                    setProducts(products.filter((_, i) => i !== index));
+                    message.success('Product deleted successfully!');
+                }
+                else
+                    message.error("Something went wrong!");
+            })
 
-            setProducts(products.filter((_, i) => i !== index));
-            message.success('Product deleted successfully!');
         }
         else
             message.error('Product does not found!');
     }
 
-    return (<Table columns={columns} dataSource={products} />)
+    return (<Table columns={columns} dataSource={products} rowKey="id" />)
 }
 
 export default ProductList;
